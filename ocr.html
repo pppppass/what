@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./ocr.css">
+    <script type="module">
+      import pdfjsDist  from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.3.93/+esm';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.3.93/pdf.worker.min.mjs';
+    </script>
+    <script type="module">
+      import tesseractJs from 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/+esm';
+      globalThis.Tesseract = tesseractJs;
+      const worker = await Tesseract.createWorker('eng');
+      globalThis.tesseractWorker = worker;
+      worker.setParameters({
+        tessedit_pageseg_mode: Tesseract.PSM.AUTO_OSD,
+      });
+    </script>
+    <script type="module" src="ocr-interactive.js"></script>
+  </head>
+  <body style="display: flex">
+    <div style="width: 50%; display: flow" class="sep-small">
+      <div style="display: block">
+        <input type="file" id="ocr-file-input" accept="application/pdf" style="display: none"></input>
+        <label for="ocr-file-input">
+          <div class="text-mid button">
+            File:
+          </div>
+        </label>
+        <div id="ocr-page-ctr" class="text-mid">
+          <div id="ocr-page-filename" style="display: inline" translate="no">-</div> : <div id="ocr-page-pagenum" style="display: inline" contenteditable="true" translate="no">-</div> / <div id="ocr-page-pagecount" style="display: inline" translate="no">-</div> <div id="ocr-page-prev" class="button">Prev</div><div id="ocr-page-next" class="button">Next</div>
+        </div>
+      </div>
+      <div id="col-left-page" style="display: block">
+        <div id="ocr-page-container" style="display: inline flex; position: relative" class="block">
+          <canvas id="ocr-page-canvas" height="150" width="150" style="z-index: 1"></canvas>
+        </div>
+      </div>
+    </div>
+    <div style="width: 50%; display: flow" class="sep-small">
+      <div style="display: block">
+        <div class="text-mid">
+          <div id="ocr-page-lazy" class="button">Defer</div><div id="ocr-page-merge" class="button">Merge</div><div id="ocr-page-delete" class="button">Delete</div><div id="ocr-page-refresh" class="button">Refresh</div><div id="ocr-page-save" class="button">Save</div><div id="ocr-page-open" class="button">Load</div>
+        </div>
+      </div>
+      <div class="block sep-tiny" id="ocr-text-container" style="display: block; padding-left: calc(0.25vmin + 1em); min-height: 150px">
+      </div>
+    </div>
+    <script src="ocr-main.js"></script>
+  </body>
+</html>
